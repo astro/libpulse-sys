@@ -1024,6 +1024,8 @@ pub type pa_signal_destroy_cb_t =
                                                e: *mut pa_signal_event,
                                                userdata: *mut ::libc::c_void)
                               -> ()>;
+pub enum Struct_pa_simple { }
+pub type pa_simple = Struct_pa_simple;
 #[link(name = "pulse")]
 extern "C" {
     pub fn pa_get_library_version() -> *const ::libc::c_char;
@@ -2017,4 +2019,29 @@ extern "C" {
      -> *mut Struct_timeval;
     pub fn pa_timeval_load(tv: *const Struct_timeval) -> pa_usec_t;
     pub fn pa_rtclock_now() -> pa_usec_t;
+}
+#[link(name = "pulse-simple")]
+extern "C" {
+    pub fn pa_simple_new(server: *const ::libc::c_char,
+                         name: *const ::libc::c_char,
+                         dir: pa_stream_direction_t,
+                         dev: *const ::libc::c_char,
+                         stream_name: *const ::libc::c_char,
+                         ss: *const pa_sample_spec,
+                         map: *const pa_channel_map,
+                         attr: *const pa_buffer_attr,
+                         error: *mut ::libc::c_int) -> *mut pa_simple;
+    pub fn pa_simple_free(s: *mut pa_simple) -> ();
+    pub fn pa_simple_write(s: *mut pa_simple, data: *const ::libc::c_void,
+                           bytes: size_t, error: *mut ::libc::c_int)
+     -> ::libc::c_int;
+    pub fn pa_simple_drain(s: *mut pa_simple, error: *mut ::libc::c_int)
+     -> ::libc::c_int;
+    pub fn pa_simple_read(s: *mut pa_simple, data: *mut ::libc::c_void,
+                          bytes: size_t, error: *mut ::libc::c_int)
+     -> ::libc::c_int;
+    pub fn pa_simple_get_latency(s: *mut pa_simple, error: *mut ::libc::c_int)
+     -> pa_usec_t;
+    pub fn pa_simple_flush(s: *mut pa_simple, error: *mut ::libc::c_int)
+     -> ::libc::c_int;
 }
