@@ -3,6 +3,7 @@ extern crate libpulse_sys;
 use libpulse_sys::*;
 use std::ptr::{null, null_mut};
 use std::{mem, slice};
+use std::ffi::CString;
 
 const SAMPLES: usize = 240;
 
@@ -13,11 +14,13 @@ fn main() {
         rate: 48000
     };
     let s = unsafe {
+        let name_c = CString::new("Rust!").unwrap();
+        let desc_c = CString::new("Example").unwrap();
         pa_simple_new(null(),             // Use the default server.
-                      "Rust!".as_ptr() as *const i8,  // Our application's name.
+                      name_c.as_ptr() as *const i8,  // Our application's name.
                       PA_STREAM_PLAYBACK,
                       null(),             // Use the default device.
-                      "Example".as_ptr() as *const i8,  // Description of our stream.
+                      desc_c.as_ptr() as *const i8,  // Description of our stream.
                       &ss,                // Our sample format.
                       null(),             // Use default channel map
                       null(),             // Use default buffering attributes.
